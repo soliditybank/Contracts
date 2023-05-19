@@ -27,27 +27,27 @@ contract ERC20 is IERC20 {
 		return balances[owner];
 	}
 
-	function transfer(address to, uint256 value) public returns (bool success) {
-		require(balances[msg.sender] >= value, "Non-sufficient funds");
-		balances[msg.sender] -= value;
-		balances[to] += value;
-		emit Transfer(msg.sender, to, value);
+	function transfer(address to, uint256 amount) public returns (bool success) {
+		require(balances[msg.sender] >= amount, "Non-sufficient funds");
+		balances[msg.sender] -= amount;
+		balances[to] += amount;
+		emit Transfer(msg.sender, to, amount);
 		return true;
 	}
 
-	function transferFrom(address from, address to, uint256 value) public returns (bool success) {
+	function transferFrom(address from, address to, uint256 amount) public returns (bool success) {
 		require(approved[from][msg.sender], "Not approved");
-		require(allowances[from][msg.sender] >= value, "Non-sufficient funds");
-		allowances[from][msg.sender] -= value;
-		balances[from] -= value;
-		balances[to] += value;
-		emit Transfer(msg.sender, to, value);
+		require(allowances[from][msg.sender] >= amount, "Non-sufficient funds");
+		allowances[from][msg.sender] -= amount;
+		balances[from] -= amount;
+		balances[to] += amount;
+		emit Transfer(msg.sender, to, amount);
 		return true;
 	}
 
-	function approve(address spender, uint256 value) public returns (bool success) {
+	function approve(address spender, uint256 amount) public returns (bool success) {
 		approved[msg.sender][spender] = true;
-		allowances[msg.sender][spender] = value;
+		allowances[msg.sender][spender] = amount;
 		return true;
 	}
 
