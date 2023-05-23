@@ -6,53 +6,71 @@ import "./IERC20.sol";
 
 contract ERC20 is IERC20 {
 
-	string public name;
-	string public symbol;
-	uint8 public decimals;
-	uint256 public totalSupply;
+	address public admin;
+	string _name;
+	string _symbol;
+	uint8 _decimals;
+	uint256 _totalSupply;
 	mapping(address => uint256) balances;
 	mapping(address => mapping(address => uint256)) allowances;
 	mapping(address => mapping(address => bool)) approved;
 
-	constructor (string memory _name, string memory _symbol, uint8 _decimals, uint256 _totalSupply) {
-		name = _name;
-		symbol = _symbol;
-		decimals = _decimals;
-		totalSupply = _totalSupply * 10**_decimals;
-		balances[msg.sender] += totalSupply;
-		emit Transfer(address(0), owner, totalSupply);
+	constructor (string memory n, string memory s, uint8 d, uint256 t) {
+		  _name = n;
+		  _symbol = s;
+		  _decimals = d;
+		  _totalSupply = t * 10**_decimals;
+			balances[msg.sender] = _totalSupply;
+			emit Transfer(address(0), msg.sender, _totalSupply);
 	}
 
-	function balanceOf(address owner) public view returns (uint256 balance) {
-		return balances[owner];
+	function name() public view returns (string memory) {
+		  return _name;
 	}
 
-	function transfer(address to, uint256 amount) public returns (bool success) {
-		require(balances[msg.sender] >= amount, "Non-sufficient funds");
-		balances[msg.sender] -= amount;
-		balances[to] += amount;
-		emit Transfer(msg.sender, to, amount);
-		return true;
+	function symbol() public view returns (string memory) {
+		  return _symbol;
 	}
 
-	function transferFrom(address from, address to, uint256 amount) public returns (bool success) {
-		require(approved[from][msg.sender], "Not approved");
-		require(allowances[from][msg.sender] >= amount, "Non-sufficient funds");
-		allowances[from][msg.sender] -= amount;
-		balances[from] -= amount;
-		balances[to] += amount;
-		emit Transfer(msg.sender, to, amount);
-		return true;
+	function decimals() public view returns (uint8) {
+		  return _decimals;
 	}
 
-	function approve(address spender, uint256 amount) public returns (bool success) {
-		approved[msg.sender][spender] = true;
-		allowances[msg.sender][spender] = amount;
-		return true;
+	function totalSupply() public view returns (uint256) {
+		  return _totalSupply;
 	}
 
-	function allowance(address owner, address spender) public view returns (uint256 remaining) {
-		return allowances[owner][spender];
+	function balanceOf(address owner) public view returns (uint256) {
+		  return balances[owner];
+	}
+
+	function transfer(address to, uint256 amount) public returns (bool) {
+		  require(balances[msg.sender] >= amount, "Non-sufficient funds");
+		  balances[msg.sender] -= amount;
+		  balances[to] += amount;
+		  emit Transfer(msg.sender, to, amount);
+		  return true;
+	}
+
+	function transferFrom(address from, address to, uint256 amount) public returns (bool) {
+		  require(approved[from][msg.sender], "Not approved");
+		  require(allowances[from][msg.sender] >= amount, "Non-sufficient funds");
+		  allowances[from][msg.sender] -= amount;
+		  balances[from] -= amount;
+		  balances[to] += amount;
+		  emit Transfer(msg.sender, to, amount);
+		  return true;
+	}
+	
+	function approve(address spender, uint256 amount) public returns (bool) {
+		  approved[msg.sender][spender] = true;
+		  allowances[msg.sender][spender] = amount;
+			emit Approval(msg.sender, spender, amount);
+		  return true;
+	}
+
+	function allowance(address owner, address spender) public view returns (uint256) {
+		  return allowances[owner][spender];
 	}
 
 }
