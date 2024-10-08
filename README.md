@@ -1,2 +1,2 @@
 # Contracts
-Contracts used in Solidity Bank
+All contracts used in SolidityBank are public.
